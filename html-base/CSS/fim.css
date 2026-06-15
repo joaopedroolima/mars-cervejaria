@@ -1,0 +1,85 @@
+
+body {
+    font-family: 'Baloo', cursive; 
+    background-color: #f4f7f9; 
+    margin: 0;
+    padding: 0;
+}
+
+
+header {
+    background-color: #ffb74d; 
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+header h1 {
+    font-size: 2.5em;
+}
+
+
+.conteudo {
+    background-color: white;
+    padding: 30px;
+    max-width: 800px;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.conteudo h2 {
+    color: #007bff; 
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.conteudo p {
+    font-size: 1.2em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 100%;  /* Faz a logo responsiva */
+    height: auto;     /* Mantém a proporção da imagem */
+  }
+
+  .navbar {
+    justify-content: center;
+    box-shadow: 0 8px 15px rgb(123, 122, 122);
+}
+
+/* Ajustar o alinhamento dos itens e centralizar o conteúdo */
+.navbar-collapse {
+    display: flex;
+    justify-content: center;
+}
+
+/* Centralizar o conteúdo da lista de navegação */
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Ajuste para os botões de ação ao lado direito */
+.navbar .btn {
+    margin-left: 5px;
+}
+.navbar-brand{
+    margin-left: 30px;
+}
+img{
+    max-width: 300px;
+    justify-items: center;
+    align-items: center;
+    margin: auto;
+    display: flex;
+}
+
+
+
+

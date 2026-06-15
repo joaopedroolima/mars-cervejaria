@@ -1,0 +1,31 @@
+body {
+    font-family:  'Baloo', cursive;
+    background-color: rgb(255, 255, 255);
+    margin: 0;
+    padding: 0;
+  }
+.p1{
+    text-align: center;
+    margin: auto;
+    max-width: 900px;
+}
+.btnform{
+    text-align: center;
+    margin: auto;
+    max-width: 100%;
+}
+.row2{
+    display:flex ;
+}
+.formq{
+    
+    color: rgb(59, 120, 252);
+}
+.h1qf{
+    margin-top: 20px;
+    color: orange;
+}
+#butaof{
+    background-color:orange;
+    
+}

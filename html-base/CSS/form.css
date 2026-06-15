@@ -1,0 +1,65 @@
+
+.logo {
+    max-width: 100%;  /* Faz a logo responsiva */
+    height: auto;     /* Mantém a proporção da imagem */
+  }
+
+  .navbar {
+    justify-content: center;
+    box-shadow: 0 8px 15px rgb(123, 122, 122);
+}
+
+/* Ajustar o alinhamento dos itens e centralizar o conteúdo */
+.navbar-collapse {
+    display: flex;
+    justify-content: center;
+}
+
+/* Centralizar o conteúdo da lista de navegação */
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Ajuste para os botões de ação ao lado direito */
+.navbar .btn {
+    margin-left: 5px;
+}
+.navbar-brand{
+    margin-left: 30px;
+
+}
+body{
+    font-family:  'Baloo', cursive;
+
+}
+h2{
+    color: rgb(235, 167, 104); 
+    text-align: center;
+}
+form {
+    margin: 3%;
+}
+.but{
+    background-color: rgb(235, 167, 104); 
+}
+
+/* css do  form2 */
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  resize: none;
+  background-color: #fafafa;
+  color: #333;
+}
+
+textarea:focus {
+  border-color:  rgb(235, 167, 104); ;
+  outline: none;
+}
+

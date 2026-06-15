@@ -1,0 +1,98 @@
+.navbar {
+    justify-content: center;
+    box-shadow: 0 8px 15px rgb(123, 122, 122);
+}
+
+/* Ajustar o alinhamento dos itens e centralizar o conteúdo */
+.navbar-collapse {
+    display: flex;
+    justify-content: center;
+}
+
+/* Centralizar o conteúdo da lista de navegação */
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Ajuste para os botões de ação ao lado direito */
+.navbar .btn {
+    margin-left: 5px;
+}
+.navbar-brand{
+    margin-left: 30px;
+
+}
+.carousel-inner{
+    border-radius: 10px;
+    margin-left: 40px;
+    margin-top: 15px;
+    max-width: 95%;
+    height: 610px;
+}
+.t1{
+
+    
+    margin-top: 60px;
+    text-align: center;
+    margin: auto;
+    max-width: 800px;
+    color: rgba(235, 167, 104,)
+}
+.cardgrup{
+    margin-top: 60px;
+    text-align: center;
+    margin: auto;
+    max-width: 800px;
+    color: rgba(235, 167, 104,)
+}
+
+.card2{
+    margin-top: 60px;
+    text-align: center;
+    margin: auto;
+    max-width: 300px;
+  
+ 
+}
+.card-tex{
+    
+    font-size: 14px;
+}
+.card-img-to{
+    height: 200px;
+}
+.p2{
+    color: slategray;
+    font-size: 14px;
+    text-align: center;
+    margin: auto;
+    max-width: 900px;
+}
+.pqadotar{
+    margin-top: 60px;
+    text-align: center;
+    margin: auto;
+    
+    display: flex;
+    padding-right: 30px;
+}
+.h1video{
+    margin-left: 20px;
+    color: rgba(235, 167, 104,);
+}
+ol{
+    margin-right: 180px;
+    margin-left: 50px;
+    font-size: 12;
+    max-width: 500px;
+
+}
+.porra{
+    
+    color: rgba(235, 167, 104,);
+}
+body{
+    font-family: 'Baloo', cursive; ;
+}

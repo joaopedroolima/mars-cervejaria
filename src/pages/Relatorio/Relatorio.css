@@ -1,0 +1,16 @@
+/* Relatorio.css — estilos específicos da página de Relatório */
+
+/* Receita total em destaque no stat-card */
+.relatorio-receita {
+  font-size: 1.5rem;
+}
+
+.celula-vazia {
+  text-align: center;
+  color: #bbb;
+  padding: 2rem !important;
+}
+
+.celula-medalha {
+  font-size: 1.2rem;
+}

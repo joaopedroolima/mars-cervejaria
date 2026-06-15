@@ -1,0 +1,139 @@
+/* Login.css — baseado no estilo do #form do style.css original da MARS */
+
+.login-pagina {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+/* Imagem das 3 garrafas — igual ao inicio.html */
+.login-cervejas-img {
+  width: 420px;
+  max-width: 45vw;
+  filter: drop-shadow(10px 15px 25px rgba(0, 0, 0, 0.3));
+  animation: flutuar 4s ease-in-out infinite;
+}
+
+@keyframes flutuar {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@media (max-width: 768px) {
+  .login-cervejas-img { display: none; }
+}
+
+/* Cartão branco centralizado — igual ao #form original */
+.login-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 60px 50px;
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  color: #FFA800;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo MARS com gradiente */
+.login-titulo {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 5rem;
+  letter-spacing: 10px;
+  line-height: 1;
+  background: linear-gradient(316.12deg, #FFA800 59.23%, #FF2525 116.27%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-cervejaria {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 1rem;
+  color: #FF2525;
+  letter-spacing: 6px;
+  margin-bottom: 4px;
+}
+
+.login-desc {
+  font-size: 0.8rem;
+  color: #aaa;
+  letter-spacing: 1px;
+  margin-bottom: 32px;
+}
+
+/* Grupos de campo — herdando .form-group do App.css */
+.login-card .form-group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.login-card .form-group input {
+  min-width: 280px;
+  width: 100%;
+  border-radius: 22px;
+  border: 2px solid #e0e0e0;
+  padding: 12px 18px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.login-card .form-group input:focus {
+  border-color: #FFA800;
+}
+
+.login-card .form-group input.input-erro {
+  border-color: #FF2525;
+}
+
+.login-erro {
+  background: rgba(255, 37, 37, 0.08);
+  border: 1px solid rgba(255, 37, 37, 0.3);
+  color: #FF2525;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+/* Botão entrar — igual ao #btn button do style.css original */
+.btn-entrar {
+  margin-top: 20px;
+  width: 100%;
+  background: linear-gradient(316.12deg, #FFA800 59.23%, #FF2525 116.27%);
+  border: none;
+  border-radius: 22px;
+  padding: 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  color: #000;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-entrar:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 25px rgba(255, 168, 0, 0.45);
+}
+
+.login-dica {
+  margin-top: 20px;
+  font-size: 0.72rem;
+  color: #ccc;
+}

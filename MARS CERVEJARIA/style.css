@@ -1,0 +1,588 @@
+@import url('https://fonts.googleapis.com/css2?family=Alata&family=Bebas+Neue&family=Comfortaa&family=Poppins:wght@300;400;500;600&family=Quicksand&display=swap');
+
+@keyframes container{
+    from{
+        top: -800px;
+        opacity: 0%;
+    }
+    to{
+        top: 0px;
+        opacity: 100%;
+    }
+}
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+@keyframes cabecalho{
+    from{
+        left: -800px;
+        opacity: 0%;
+    }
+    to{
+        left: 0px;
+        opacity: 100%;
+    }
+}
+
+@keyframes yellow-txt{
+    from{
+        left: -800px;
+        opacity: 0%;
+    }
+    to{
+        left: 0px;
+        opacity: 100%;
+    }
+}
+
+@keyframes gradiente{
+    0%{
+        background: #FFA800;
+    }
+    25%{
+        background: #ff8800;
+    }
+    50%{
+        background: #ff6600;
+    }
+
+    75%{
+        background: #ffa600;
+    }
+
+    100%{
+        background: #FFA800;
+    }
+}
+@keyframes sol{
+    0%{
+        left: 1500px;
+        rotate: 2000deg;
+        scale: 0;
+    }
+
+    50%{
+        rotate: 1000deg;
+        scale: 2;
+    }
+
+    100%{
+        left: -300px;
+        rotate: 0deg;
+        scale: 0;
+    }
+}
+
+@keyframes particulas{
+    0%{
+        top: 0px;
+    }
+    25%{
+        top: 30px;
+    }
+    50%{
+        top: 50px;
+    }
+    75%{
+        top: 30px;
+    }
+    100%{
+        top: 0px;
+    }
+}
+
+.particulas{
+    position: absolute;
+    left: 750px;
+    animation: particulas 7s infinite;
+    transition: 0.5s;
+    z-index: -100;
+    opacity: 40%;
+}
+
+hr{
+    color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    height: 1px;
+    border: none;
+}
+.text-fot{
+    text-align: center;
+    justify-content: center;
+    color: #fff;
+    padding: 20px;
+    position: relative;
+    z-index: 5;
+
+}
+
+.sol{
+    left: -500px;
+    position: absolute;
+    z-index: -6;
+    padding: 20px;
+    animation: sol 15s;
+    scale: -1;
+}
+
+body{
+    background: linear-gradient(316.12deg, #FFA800 59.23%, #FF2525 116.27%);
+    font-family: 'Poppins', sans-serif;
+    animation: gradiente 7s infinite;
+    transition: 1.5s;
+}
+
+.cabecalho {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 24px;
+    animation-name: cabecalho;
+    animation-duration: 3s;
+    position: relative;
+}
+
+.cabecalho-img {
+    height: 72px;
+    padding-right: 800px;
+}
+
+.cabecalho-txt {
+    display: flex;
+    gap: 40px;
+}
+
+.cabecalho-txt-it {
+    font-weight: 700;
+    color: rgb(255, 255, 255);
+    letter-spacing: 0.025em;
+    line-height: 42px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 25px;
+}
+
+.container{
+    font-family: 'Alata', sans-serif;
+    display: flex;
+    flex-direction: row;
+    padding-top: 200px;
+    animation-name: container;
+    animation-duration: 3s;
+    position: relative;
+}
+
+.container-img{
+    margin-left: 20px;
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.caratriste{
+    justify-content: right;
+    align-items: center;
+    padding-left: 100px;
+    margin-left: 200px;
+}
+
+.container-txtP{
+    font-size: 50px;
+    color: #fff;
+}
+
+.container-txtS{
+    font-weight: 50;
+    color: #fff;
+    letter-spacing: 2.5%;
+}
+.inicio{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.inicio-img{
+    width: 20%;
+    margin-left: 40px;
+}
+
+.cervejas{
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+.cervejas:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    -webkit-filter: drop-shadow(15px 10px 5px rgba(0,0,0,.5));
+    filter: drop-shadow(15px 10px 5px rgba(0,0,0,.5));
+}
+
+.inicio-txt{
+    font-family: 'Alata', sans-serif;
+    text-align: left;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+    margin-left: 100px;
+    font-size: 80px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.sol-so{
+    left: -600px;
+    position: absolute;
+    z-index: -6;
+    padding: 20px;
+    animation: sol 5s;
+    scale: -1;
+}
+
+.yellow-img{
+    width: 20%;
+    position: absolute;
+    left: 1100px;
+    top: 218px;
+    z-index: 1;
+    transition: 0.5s;
+}
+.yellow-img:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    rotate: -25deg;
+    -webkit-filter: drop-shadow(15px 10px 5px rgba(0,0,0,.5));
+    filter: drop-shadow(15px 10px 5px rgba(0,0,0,.5));
+}
+
+.yellow-txt-tt{
+    font-weight: 600;
+    font-size: 40px;
+    align-items: left;
+    text-align: left;
+    justify-content: left;
+    color: #fff;
+    margin-top: 340px;
+    position: absolute;
+    margin-left: 150px;
+    z-index: 2;
+    animation: yellow-txt;
+    animation-duration: 3s;
+    transition: 0.5s;
+}
+
+.yellow-txt-tt:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.yellow-txt{
+    font-weight: 600;
+    font-size: 20px;
+    align-items: left;
+    text-align: left;
+    justify-content: left;
+    color: #fff;
+    margin-top: 410px;
+    position: absolute;
+    margin-left: 150px;
+    z-index: 2;
+    animation: yellow-txt;
+    animation-duration: 3s;
+    transition: 0.5s;
+
+}
+.yellow-txt:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.green-img{
+    width: 25%;
+    position: absolute;
+    left: 100px;
+    top: 150px;
+    z-index: 1;
+    transition: 0.5s;
+}
+.green-img:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    rotate: 25deg;
+    -webkit-filter: drop-shadow(15px 10px 5px rgba(0,0,0,.5));
+    filter: drop-shadow(15px 10px 5px rgba(0,0,0,.5));
+}
+
+.green-txt-tt{
+    font-weight: 600;
+    font-size: 40px;
+    align-items: left;
+    text-align: left;
+    justify-content: left;
+    color: #fff;
+    margin-top: 340px;
+    position: absolute;
+    left: 1100px;
+    z-index: 2;
+    animation: yellow-txt;
+    animation-duration: 3s;
+    transition: 0.5s;
+}
+.green-txt-tt:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.green-txt{
+    font-weight: 600;
+    font-size: 20px;
+    align-items: left;
+    text-align: left;
+    justify-content: left;
+    color: #fff;
+    margin-top: 410px;
+    position: absolute;
+    margin-left: 1100px;
+    z-index: 2;
+    animation: yellow-txt;
+    animation-duration: 3s;
+    transition: 0.5s;
+}
+.green-txt:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.green{
+    position: absolute;
+    width: 100%;
+    margin-top: 600px;
+}
+.blue-img{
+    width: 25%;
+    position: absolute;
+    left: 1100px;
+    top: 218px;
+    z-index: 1;
+    transition: 0.5s;
+}
+.blue-img:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    rotate: -25deg;
+    -webkit-filter: drop-shadow(15px 10px 5px rgba(0,0,0,.5));
+    filter: drop-shadow(15px 10px 5px rgba(0,0,0,.5));
+}
+
+.blue-txt-tt{
+    font-weight: 600;
+    font-size: 40px;
+    align-items: left;
+    text-align: left;
+    justify-content: left;
+    color: #fff;
+    margin-top: 340px;
+    position: absolute;
+    margin-left: 150px;
+    z-index: 2;
+    animation: yellow-txt;
+    animation-duration: 3s;
+    transition: 0.5s;
+}
+.blue-txt-tt:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.blue-txt{
+    font-weight: 600;
+    font-size: 20px;
+    align-items: left;
+    text-align: left;
+    justify-content: left;
+    color: #fff;
+    margin-top: 410px;
+    position: absolute;
+    margin-left: 150px;
+    z-index: 2;
+    animation: yellow-txt;
+    animation-duration: 3s;
+    transition: 0.5s;
+}
+.blue-txt:hover{
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.blue{
+    position: absolute;
+    top: 1600px;
+    width: 100%;
+    
+}
+button{
+    font-family: 'Alata', sans-serif;
+    border: none;
+    padding: 15px 30px;
+    font-size: 20px;
+    outline: none;
+    margin: 5px;
+    background: transparent;
+    cursor: pointer;
+}
+
+#botaosim{
+    color: #fff;
+    border: 4px solid #fff;
+    transition: 0.5s;
+}
+
+#botaosim:hover{
+    color: #000000;
+    border-color: #000000;
+    border-radius: 20px;
+    scale: 1.2;
+}
+#form{
+    position: absolute;
+    top: 60%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 20px;
+    padding: 60px;
+    width: min-content;
+    align-items: center;
+    color: #FFA800;
+    animation: iniciar 1.6s ease-out;
+    pointer-events: all;
+}
+
+.titulo{
+    font-size: 1.8em; 
+    margin-bottom: 10%;
+    display: flex;
+    flex-direction: row;
+}
+
+.input{
+    min-width: 280px;
+    border-radius: 22px;
+    border: 2px #000000 solid;
+    padding: 5px;
+    margin: 0px 0px 12px -5px;
+}
+
+.input i{
+    font-size: 1.2em;
+    padding: 5px;
+    background: linear-gradient(316.12deg, #FFA800 59.23%, #FF2525 116.27%);
+    border-radius: 30px;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: transparent;
+}
+
+.input input{
+    width: 80%;
+    border: none;
+    outline: none;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 16px;
+}
+#btn{
+    margin-top: 10%;
+    width: 100%;
+    text-align: center;
+}
+
+#btn button{
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(316.12deg, #FFA800 59.23%, #FF2525 116.27%);
+    width: 100%;
+    height: 40px;
+    border: none;
+    font-size: 1.2em;
+    color: rgb(0, 0, 0);
+    border-radius: 20px;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    font-weight:900;
+    transition: 0.5s;
+}
+
+#btn button:hover{
+    background: linear-gradient(246.81deg, #0bc539 2.99%, #23ec66 100%);
+    scale: 1.2;
+}
+
+.cerveja-ad{
+    left: 1100px;
+    bottom: 50px;
+    position: absolute;
+    width: 20%;
+    transition: 1s;
+}
+
+.cerveja-ad:hover{
+    scale: 1.5;
+}
+
+.text-ad{
+    z-index: 4;
+    padding: 800px;
+}
+
+.mapa{
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    right: 20px;
+    background-position: 100px 200px;
+    margin-left: 80px;
+    margin-bottom: 50px;
+}
+
+.icones{
+    position: absolute;
+    left: 50%;
+    right: 42.71%;
+    top: 52.49%;
+    bottom: 37.26%;
+    gap: 70px;
+    transition: 0.5s;
+}
+
+.icones:hover{
+    scale: 1.2;
+}
+
+.text-cont{
+    color: #fff;
+    font-weight: 500;
+    font-size: 40px;
+    position: absolute;
+    width: 334px;
+    height: 217px;
+    left: 1070px;
+    top: 460px;
+}
+
+.instawpp{
+    text-decoration: none;
+    color: #fff;
+    transition: 0.5s;
+    position: relative;
+}
+
+.instawpp:hover{
+    scale: 1.5;
+}
