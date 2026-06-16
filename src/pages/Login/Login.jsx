@@ -91,7 +91,7 @@ export default function Login() {
             {erros.senha && <span className="erro-msg">{erros.senha}</span>}
           </div>
 
-          {erroLogin && <div className="login-erro">⚠️ {erroLogin}</div>}
+          {erroLogin && <div className="login-erro">{erroLogin}</div>}
 
           <button type="submit" className="btn-entrar">
             ENTRAR

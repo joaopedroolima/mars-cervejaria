@@ -3,10 +3,10 @@ import { useAuth } from '../../context/AuthContext';
 import './Header.css';
 
 const NAV_LINKS = [
-  { to: '/cervejas',     label: '🍺 Cervejas'     },
-  { to: '/fornecedores', label: '🏭 Fornecedores'  },
-  { to: '/vendas',       label: '🧾 Vendas'        },
-  { to: '/relatorio',    label: '📊 Relatório'     },
+  { to: '/cervejas',     label: 'Cervejas'     },
+  { to: '/fornecedores', label: 'Fornecedores'  },
+  { to: '/vendas',       label: 'Vendas'        },
+  { to: '/relatorio',    label: 'Relatório'     },
 ];
 
 export default function Header() {

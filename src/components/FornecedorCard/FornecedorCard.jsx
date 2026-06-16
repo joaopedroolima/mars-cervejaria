@@ -2,7 +2,7 @@ export default function FornecedorCard({ fornecedor, onEditar, onExcluir }) {
   return (
     <div className="card">
       <div className="card-header">
-        <span className="card-icon">🏭</span>
+        <span className="card-icon"></span>
         <h3 className="card-title">{fornecedor.nome}</h3>
       </div>
 
@@ -19,10 +19,10 @@ export default function FornecedorCard({ fornecedor, onEditar, onExcluir }) {
 
       <div className="card-actions">
         <button className="btn-edit" onClick={() => onEditar(fornecedor)}>
-          ✏️ Editar
+          Editar
         </button>
         <button className="btn-delete" onClick={() => onExcluir(fornecedor.id)}>
-          🗑️ Excluir
+          Excluir
         </button>
       </div>
     </div>

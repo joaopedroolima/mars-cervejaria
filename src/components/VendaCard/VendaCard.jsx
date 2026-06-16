@@ -2,7 +2,7 @@ export default function VendaCard({ venda, cervejaNome, onEditar, onExcluir }) {
   return (
     <div className="card">
       <div className="card-header">
-        <span className="card-icon">🧾</span>
+        <span className="card-icon"></span>
         <h3 className="card-title">{cervejaNome}</h3>
       </div>
 
@@ -25,10 +25,10 @@ export default function VendaCard({ venda, cervejaNome, onEditar, onExcluir }) {
 
       <div className="card-actions">
         <button className="btn-edit" onClick={() => onEditar(venda)}>
-          ✏️ Editar
+          Editar
         </button>
         <button className="btn-delete" onClick={() => onExcluir(venda.id)}>
-          🗑️ Excluir
+          Excluir
         </button>
       </div>
     </div>

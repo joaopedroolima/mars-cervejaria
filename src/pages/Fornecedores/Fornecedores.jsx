@@ -96,7 +96,7 @@ export default function Fornecedores() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1 className="page-title">🏭 Fornecedores</h1>
+        <h1 className="page-title">Fornecedores</h1>
         <button className="btn-primary" onClick={toggleForm}>
           {mostrarForm && editandoId === null ? '✕ Fechar' : '+ Novo Fornecedor'}
         </button>
@@ -105,7 +105,7 @@ export default function Fornecedores() {
       {mostrarForm && (
         <div className="form-card">
           <h2 className="form-title">
-            {editandoId ? '✏️ Editar Fornecedor' : '+ Novo Fornecedor'}
+            {editandoId ? 'Editar Fornecedor' : '+ Novo Fornecedor'}
           </h2>
           <form onSubmit={handleSubmit} noValidate>
             <div className="form-grid">

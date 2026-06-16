@@ -12,7 +12,7 @@ export default function CervejaCard({ cerveja, onEditar, onExcluir }) {
             className="cerveja-img"
           />
         ) : (
-          <span className="cerveja-img-placeholder">🍺</span>
+          <span className="cerveja-img-placeholder">?</span>
         )}
       </div>
 
@@ -41,10 +41,10 @@ export default function CervejaCard({ cerveja, onEditar, onExcluir }) {
 
       <div className="card-actions">
         <button className="btn-edit" onClick={() => onEditar(cerveja)}>
-          ✏️ Editar
+          Editar
         </button>
         <button className="btn-delete" onClick={() => onExcluir(cerveja.id)}>
-          🗑️ Excluir
+          Excluir
         </button>
       </div>
     </div>

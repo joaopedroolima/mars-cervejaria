@@ -4,7 +4,7 @@ import './Relatorio.css';
 const STORAGE_CERVEJAS = 'mars_cervejas';
 const STORAGE_VENDAS   = 'mars_vendas';
 
-const MEDALHAS = ['🥇', '🥈', '🥉'];
+const MEDALHAS = ['1°', '2°', '3°'];
 
 function lerStorage(chave, fallback) {
   try {
@@ -47,7 +47,7 @@ export default function Relatorio() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1 className="page-title">📊 Relatório de Vendas</h1>
+        <h1 className="page-title">Relatório de Vendas</h1>
       </div>
 
       {/* Resumo geral */}
