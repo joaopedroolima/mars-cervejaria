@@ -4,7 +4,8 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Header from './components/Header/Header';
 import Login from './pages/Login/Login';
 import Cervejas from './pages/Cervejas/Cervejas';
-import Fornecedores from './pages/Fornecedores/Fornecedores';
+import Clientes from './pages/Clientes/Clientes';
+import Contatos from './pages/Contatos/Contatos';
 import Vendas from './pages/Vendas/Vendas';
 import Relatorio from './pages/Relatorio/Relatorio';
 import './App.css';
@@ -39,12 +40,20 @@ function Rotas() {
         }
       />
       <Route
-        path="/fornecedores"
+        path="/clientes"
         element={
           <ProtectedRoute>
-            <ComHeader><Fornecedores /></ComHeader>
+            <ComHeader><Clientes /></ComHeader>
           </ProtectedRoute>
         }
+      />
+      <Route 
+        path="/contatos" 
+        element={
+          <ProtectedRoute>
+            <ComHeader><Contatos /></ComHeader>
+          </ProtectedRoute>
+        } 
       />
       <Route
         path="/vendas"
