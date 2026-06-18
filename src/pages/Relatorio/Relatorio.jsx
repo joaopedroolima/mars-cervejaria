@@ -3,6 +3,7 @@ import './Relatorio.css';
 
 const STORAGE_CERVEJAS = 'mars_cervejas';
 const STORAGE_VENDAS   = 'mars_vendas';
+const STORAGE_CLIENTES = 'mars_clientes';
 
 const MEDALHAS = ['1°', '2°', '3°'];
 
@@ -18,14 +19,17 @@ function lerStorage(chave, fallback) {
 export default function Relatorio() {
   const [cervejas] = useState(() => lerStorage(STORAGE_CERVEJAS, []));
   const [vendas]   = useState(() => lerStorage(STORAGE_VENDAS,   []));
+  const [clientes] = useState(() => lerStorage(STORAGE_CLIENTES, []));
 
-  /* ── JOIN simulado: cada venda enriquecida com dados da cerveja (map + find) ── */
+  /* ── JOIN simulado: cada venda enriquecida com dados da cerveja e cliente (map + find) ── */
   const vendasComCerveja = vendas.map((venda) => {
     const cerveja = cervejas.find((c) => c.id === Number(venda.cervejaId));
+    const cliente = clientes.find((c) => c.id === Number(venda.clienteId));
     return {
       ...venda,
       cervejaNome:  cerveja?.nome   ?? 'Cerveja removida',
       cervejaEstilo: cerveja?.estilo ?? '—',
+      clienteNome: cliente?.nome ?? 'Cliente removido',
     };
   });
 
@@ -109,13 +113,14 @@ export default function Relatorio() {
         </table>
       </div>
 
-      {/* Tabela detalhada — JOIN Vendas ✕ Cervejas */}
-      <p className="section-title">Vendas detalhadas — JOIN: Vendas ✕ Cervejas</p>
+      {/* Tabela detalhada — JOIN Vendas ✕ Cervejas ✕ Clientes */}
+      <p className="section-title">Vendas detalhadas — JOIN: Vendas ✕ Cervejas ✕ Clientes</p>
       <div className="table-wrapper">
         <table className="table">
           <thead>
             <tr>
               <th>Data</th>
+              <th>Cliente</th>
               <th>Cerveja (via JOIN)</th>
               <th>Estilo</th>
               <th>Quantidade</th>
@@ -125,7 +130,7 @@ export default function Relatorio() {
           <tbody>
             {vendasComCerveja.length === 0 ? (
               <tr>
-                <td colSpan="5" className="celula-vazia">
+                <td colSpan="6" className="celula-vazia">
                   Nenhuma venda registrada
                 </td>
               </tr>
@@ -133,6 +138,7 @@ export default function Relatorio() {
               vendasComCerveja.map((venda) => (
                 <tr key={venda.id}>
                   <td>{venda.data}</td>
+                  <td><strong>{venda.clienteNome}</strong></td>
                   <td><strong>{venda.cervejaNome}</strong></td>
                   <td>
                     <span className="badge badge-orange">{venda.cervejaEstilo}</span>

@@ -1,4 +1,10 @@
-export default function VendaCard({ venda, cervejaNome, onEditar, onExcluir }) {
+export default function VendaCard({
+  venda,
+  cervejaNome,
+  clienteNome,
+  onEditar,
+  onExcluir,
+}) {
   return (
     <div className="card">
       <div className="card-header">
@@ -7,6 +13,10 @@ export default function VendaCard({ venda, cervejaNome, onEditar, onExcluir }) {
       </div>
 
       <div className="card-body">
+        <div className="card-row">
+          <span className="card-label">Cliente</span>
+          <span className="card-value">{clienteNome}</span>
+        </div>
         <div className="card-row">
           <span className="card-label">Data</span>
           <span className="card-value">{venda.data}</span>
