@@ -4,7 +4,8 @@ import './Header.css';
 
 const NAV_LINKS = [
   { to: '/cervejas',     label: 'Cervejas'     },
-  { to: '/fornecedores', label: 'Fornecedores'  },
+  { to: '/clientes',     label: 'Clientes'  },
+  { to: '/contatos',     label: 'Contatos'  },
   { to: '/vendas',       label: 'Vendas'        },
   { to: '/relatorio',    label: 'Relatório'     },
 ];
