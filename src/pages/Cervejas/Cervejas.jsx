@@ -231,15 +231,45 @@ export default function Cervejas() {
                 {erros.preco && <span className="erro-msg">{erros.preco}</span>}
               </div>
 
-              {/* Campo: Imagem (opcional — URL ou caminho do arquivo em /public) */}
-              <div className="form-group">
-                <label htmlFor="c-imagem">Imagem (URL ou caminho)</label>
-                <input
-                  id="c-imagem"
-                  value={form.imagem}
-                  onChange={(e) => handleChange('imagem', e.target.value)}
-                  placeholder="Ex: /cervejas/sol-da-tarde.png"
-                />
+              {/* Campo: Imagem — upload direto do dispositivo */}
+              <div className="form-group form-group-upload">
+                <label>Imagem</label>
+                <div className="upload-area">
+                  {/* Preview da imagem selecionada */}
+                  {form.imagem && (
+                    <img src={form.imagem} alt="Preview" className="upload-preview" />
+                  )}
+                  {/* Label age como botão — aciona o input file escondido */}
+                  <label htmlFor="c-imagem" className="btn-upload">
+                    {form.imagem ? 'Trocar imagem' : 'Escolher imagem'}
+                  </label>
+                  {/* Input file oculto — só imagens são aceitas */}
+                  <input
+                    id="c-imagem"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (!file) return;
+                      // FileReader converte o arquivo em base64 para salvar no localStorage
+                      const reader = new FileReader();
+                      reader.onload = (ev) => handleChange('imagem', ev.target.result);
+                      reader.readAsDataURL(file);
+                    }}
+                  />
+                  {/* Botão para remover a imagem atual */}
+                  {form.imagem && (
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      style={{ padding: '6px 14px', fontSize: '0.78rem' }}
+                      onClick={() => handleChange('imagem', '')}
+                    >
+                      Remover
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 

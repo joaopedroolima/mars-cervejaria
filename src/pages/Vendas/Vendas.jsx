@@ -1,8 +1,5 @@
-// useState e useEffect para gerenciar estado e persistência
 import { useState, useEffect } from "react";
-// Componente de card para exibir cada venda
 import VendaCard from "../../components/VendaCard/VendaCard";
-// Estilos específicos desta página
 import "./Vendas.css";
 
 // Chaves do localStorage para cada entidade
@@ -10,41 +7,52 @@ const STORAGE_VENDAS   = "mars_vendas";
 const STORAGE_CERVEJAS = "mars_cervejas";
 const STORAGE_CLIENTES = "mars_clientes";
 
-// Cervejas padrão usadas se não houver cervejas salvas ainda
-// Garantem que o select de cervejas nunca apareça vazio
+// Cervejas padrão se não houver cervejas cadastradas ainda
 const CERVEJAS_PADRAO = [
   { id: 1, nome: "Sol da Tarde", preco: "12.00" },
   { id: 2, nome: "Florest",      preco: "18.00" },
   { id: 3, nome: "Blue Dark",    preco: "15.00" },
 ];
 
-// Clientes padrão usados se não houver clientes salvos
+// Clientes padrão se não houver clientes cadastrados ainda
 const CLIENTES_INICIAIS = [
-  { id: 1, nome: "João Silva",    cpf: "123.456.789-00", contato: "(11) 99999-1234" },
-  { id: 2, nome: "Maria Santos",  cpf: "987.654.321-11", contato: "(11) 88888-5678" },
-  { id: 3, nome: "Pedro Oliveira",cpf: "555.123.456-22", contato: "(21) 77777-9090" },
+  { id: 1, nome: "João Silva",     cpf: "123.456.789-00", contato: "(11) 99999-1234" },
+  { id: 2, nome: "Maria Santos",   cpf: "987.654.321-11", contato: "(11) 88888-5678" },
+  { id: 3, nome: "Pedro Oliveira", cpf: "555.123.456-22", contato: "(21) 77777-9090" },
 ];
 
-// Vendas de exemplo para popular o sistema na primeira vez
+// Vendas de exemplo com o novo formato: cada venda tem um array de itens (carrinho)
 const VENDAS_INICIAIS = [
-  { id: 1, cervejaId: 1, clienteId: 1, quantidade: "10", data: "2026-06-01", valorTotal: "120.00" },
-  { id: 2, cervejaId: 2, clienteId: 2, quantidade: "5",  data: "2026-06-03", valorTotal: "90.00"  },
-  { id: 3, cervejaId: 3, clienteId: 3, quantidade: "8",  data: "2026-06-05", valorTotal: "120.00" },
-  { id: 4, cervejaId: 1, clienteId: 1, quantidade: "15", data: "2026-06-10", valorTotal: "180.00" },
-  { id: 5, cervejaId: 2, clienteId: 2, quantidade: "3",  data: "2026-06-12", valorTotal: "54.00"  },
+  {
+    id: 1, clienteId: 1, data: "2026-06-01", valorTotal: "210.00",
+    itens: [
+      { cervejaId: 1, cervejaNome: "Sol da Tarde", quantidade: 10, valorUnitario: "12.00", subtotal: "120.00" },
+      { cervejaId: 2, cervejaNome: "Florest",      quantidade: 5,  valorUnitario: "18.00", subtotal: "90.00"  },
+    ],
+  },
+  {
+    id: 2, clienteId: 2, data: "2026-06-03", valorTotal: "90.00",
+    itens: [
+      { cervejaId: 2, cervejaNome: "Florest", quantidade: 5, valorUnitario: "18.00", subtotal: "90.00" },
+    ],
+  },
+  {
+    id: 3, clienteId: 3, data: "2026-06-05", valorTotal: "120.00",
+    itens: [
+      { cervejaId: 3, cervejaNome: "Blue Dark", quantidade: 8, valorUnitario: "15.00", subtotal: "120.00" },
+    ],
+  },
+  {
+    id: 4, clienteId: 1, data: "2026-06-10", valorTotal: "234.00",
+    itens: [
+      { cervejaId: 1, cervejaNome: "Sol da Tarde", quantidade: 15, valorUnitario: "12.00", subtotal: "180.00" },
+      { cervejaId: 3, cervejaNome: "Blue Dark",    quantidade: 3,  valorUnitario: "18.00", subtotal: "54.00"  },
+    ],
+  },
 ];
 
-// Data de hoje no formato YYYY-MM-DD (padrão do input type="date")
+// Data de hoje no formato YYYY-MM-DD que o input type="date" exige
 const hoje = new Date().toISOString().split("T")[0];
-
-// Estado vazio do formulário — campo de data já começa com hoje
-const FORM_VAZIO = {
-  cervejaId:  "",
-  clienteId:  "",
-  quantidade: "",
-  data:       hoje,
-  valorTotal: "",
-};
 
 // Lê do localStorage com segurança; retorna fallback se der erro ou estiver vazio
 function lerStorage(chave, fallback) {
@@ -56,93 +64,139 @@ function lerStorage(chave, fallback) {
   }
 }
 
-// Componente principal da página de Vendas (CRUD completo com JOIN ao Clientes e Cervejas)
-export default function Vendas() {
-  // Lista de vendas — inicia lendo localStorage; se vazio usa as vendas de exemplo
-  const [vendas, setVendas]   = useState(() => lerStorage(STORAGE_VENDAS,   VENDAS_INICIAIS));
-  // Lista de cervejas (somente leitura aqui) — usada para preencher o select e calcular preço
-  const [cervejas]            = useState(() => lerStorage(STORAGE_CERVEJAS,  CERVEJAS_PADRAO));
-  // Lista de clientes (somente leitura) — usada para preencher o select
-  const [clientes]            = useState(() => lerStorage(STORAGE_CLIENTES,  CLIENTES_INICIAIS));
-  // Valores do formulário
-  const [form, setForm]       = useState(FORM_VAZIO);
-  // ID da venda sendo editada (null = modo criação)
-  const [editandoId, setEditandoId] = useState(null);
-  // Erros de validação
-  const [erros, setErros]     = useState({});
-  // Controla a visibilidade do formulário
-  const [mostrarForm, setMostrarForm] = useState(false);
+// Migra vendas no formato antigo (um único cervejaId) para o novo formato (array de itens)
+// Garante compatibilidade com dados já salvos no localStorage antes desta atualização
+function carregarVendas(cervejasList) {
+  const dados = lerStorage(STORAGE_VENDAS, VENDAS_INICIAIS);
+  return dados.map((v) => {
+    // Já está no novo formato — retorna sem mudança
+    if (v.itens) return v;
+    // Formato antigo: converte para novo criando um array com o único item
+    const cerveja = cervejasList.find((c) => c.id === Number(v.cervejaId));
+    return {
+      id: v.id,
+      clienteId: v.clienteId,
+      data: v.data,
+      itens: [{
+        cervejaId:     Number(v.cervejaId),
+        cervejaNome:   cerveja?.nome  ?? "Cerveja",
+        quantidade:    Number(v.quantidade),
+        valorUnitario: cerveja?.preco ?? "0.00",
+        subtotal:      v.valorTotal,
+      }],
+      valorTotal: v.valorTotal,
+    };
+  });
+}
 
-  // Salva as vendas no localStorage sempre que a lista mudar
+// Componente principal da página de Vendas — CRUD com carrinho de compras
+export default function Vendas() {
+  const [cervejas] = useState(() => lerStorage(STORAGE_CERVEJAS, CERVEJAS_PADRAO));
+  const [clientes] = useState(() => lerStorage(STORAGE_CLIENTES, CLIENTES_INICIAIS));
+  // Carrega vendas já migrando possíveis dados no formato antigo
+  const [vendas, setVendas] = useState(() =>
+    carregarVendas(lerStorage(STORAGE_CERVEJAS, CERVEJAS_PADRAO))
+  );
+
+  // Dados gerais da venda (cliente e data)
+  const [clienteId, setClienteId] = useState("");
+  const [data, setData]           = useState(hoje);
+
+  // Item que o usuário está prestes a adicionar ao carrinho
+  const [cervejaIdAtual, setCervejaIdAtual] = useState("");
+  const [qtdAtual, setQtdAtual]             = useState("");
+
+  // O carrinho em si: array de itens adicionados à venda atual
+  const [carrinho, setCarrinho] = useState([]);
+
+  // Controles do formulário
+  const [editandoId, setEditandoId]   = useState(null);
+  const [mostrarForm, setMostrarForm] = useState(false);
+  const [erros, setErros]             = useState({});   // erros dos dados gerais
+  const [erroItem, setErroItem]       = useState({});   // erros do item sendo adicionado
+
+  // Sempre que a lista de vendas mudar, persiste no localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_VENDAS, JSON.stringify(vendas));
   }, [vendas]);
 
-  // Calcula o valor total automaticamente: preço da cerveja × quantidade
-  const recalcularValor = (cervejaId, quantidade) => {
-    // Busca a cerveja com o ID passado dentro do array de cervejas
-    const cerveja = cervejas.find((c) => c.id === Number(cervejaId));
-    // Se encontrou a cerveja e a quantidade é válida, calcula e retorna como string com 2 casas
-    if (cerveja && quantidade && Number(quantidade) > 0)
-      return (Number(cerveja.preco) * Number(quantidade)).toFixed(2);
-    return ""; // retorna vazio se os dados não forem suficientes
+  // Calcula o total do carrinho somando os subtotais de cada item
+  const totalCarrinho = carrinho
+    .reduce((s, item) => s + Number(item.subtotal), 0)
+    .toFixed(2);
+
+  // Adiciona um item ao carrinho ao clicar em "+ Adicionar"
+  const adicionarItem = () => {
+    const errs = {};
+    if (!cervejaIdAtual) errs.cervejaId = "Selecione uma cerveja";
+    const qtd = Number(qtdAtual);
+    if (!qtdAtual || isNaN(qtd) || qtd < 1 || !Number.isInteger(qtd))
+      errs.quantidade = "Quantidade deve ser um inteiro maior que zero";
+    if (Object.keys(errs).length > 0) { setErroItem(errs); return; }
+
+    const cerveja = cervejas.find((c) => c.id === Number(cervejaIdAtual));
+    const subtotal = (Number(cerveja.preco) * qtd).toFixed(2);
+
+    // Se a mesma cerveja já está no carrinho, soma a quantidade em vez de duplicar
+    const idxExistente = carrinho.findIndex((i) => i.cervejaId === Number(cervejaIdAtual));
+    if (idxExistente >= 0) {
+      const atualizado = [...carrinho];
+      const qtdNova = atualizado[idxExistente].quantidade + qtd;
+      atualizado[idxExistente] = {
+        ...atualizado[idxExistente],
+        quantidade: qtdNova,
+        subtotal: (Number(cerveja.preco) * qtdNova).toFixed(2),
+      };
+      setCarrinho(atualizado);
+    } else {
+      // Cerveja nova: adiciona como novo item no carrinho
+      setCarrinho((prev) => [...prev, {
+        cervejaId:     Number(cervejaIdAtual),
+        cervejaNome:   cerveja.nome,
+        quantidade:    qtd,
+        valorUnitario: cerveja.preco,
+        subtotal,
+      }]);
+    }
+
+    // Limpa o formulário de item para o próximo
+    setCervejaIdAtual("");
+    setQtdAtual("");
+    setErroItem({});
   };
 
-  // Atualiza um campo do formulário e recalcula o valor total quando necessário
-  const handleChange = (campo, valor) => {
-    setForm((prev) => {
-      // Cria uma cópia do form com o campo atualizado
-      const novo = { ...prev, [campo]: valor };
-      // Se o campo alterado for cerveja ou quantidade, recalcula o valor total
-      if (campo === "cervejaId" || campo === "quantidade") {
-        // Usa o novo valor se o campo atual foi alterado, ou o valor anterior dos outros campos
-        const cid = campo === "cervejaId" ? valor : prev.cervejaId;
-        const qtd = campo === "quantidade" ? valor : prev.quantidade;
-        novo.valorTotal = recalcularValor(cid, qtd);
-      }
-      return novo;
-    });
-    // Limpa o erro do campo que foi alterado
-    setErros((prev) => ({ ...prev, [campo]: "" }));
+  // Remove um item do carrinho pelo índice
+  const removerItem = (idx) => {
+    setCarrinho((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // Valida todos os campos antes de salvar
+  // Valida os dados gerais antes de finalizar a venda
   const validar = () => {
     const e = {};
-    if (!form.clienteId) e.clienteId = "Selecione um cliente";
-    if (!form.cervejaId) e.cervejaId = "Selecione uma cerveja";
-    const qtd = Number(form.quantidade);
-    // Quantidade deve ser inteiro positivo
-    if (!form.quantidade || isNaN(qtd) || qtd < 1 || !Number.isInteger(qtd))
-      e.quantidade = "Quantidade deve ser um número inteiro maior que zero";
-    if (!form.data) e.data = "Data é obrigatória";
-    const val = Number(form.valorTotal);
-    if (!form.valorTotal || isNaN(val) || val <= 0)
-      e.valorTotal = "Valor total inválido";
+    if (!clienteId) e.clienteId = "Selecione um cliente";
+    if (!data)      e.data      = "Data é obrigatória";
+    if (carrinho.length === 0) e.carrinho = "Adicione pelo menos uma cerveja ao carrinho";
     return e;
   };
 
-  // Chamado ao submeter o formulário
+  // Chamado ao clicar em "Finalizar Venda" ou "Salvar Alterações"
   const handleSubmit = (e) => {
-    e.preventDefault(); // evita recarregar a página
-
+    e.preventDefault();
     const errosVal = validar();
     if (Object.keys(errosVal).length > 0) { setErros(errosVal); return; }
 
-    // Monta o objeto final garantindo os tipos corretos de cada campo
     const payload = {
-      ...form,
-      clienteId:  Number(form.clienteId),                          // string → número
-      cervejaId:  Number(form.cervejaId),                          // string → número
-      quantidade: String(Math.floor(Number(form.quantidade))),     // garante inteiro como string
-      valorTotal: Number(form.valorTotal).toFixed(2),              // 2 casas decimais
+      clienteId: Number(clienteId),
+      data,
+      itens:      carrinho,
+      valorTotal: totalCarrinho,
     };
 
     if (editandoId !== null) {
-      // Modo edição: substitui a venda com map()
-      setVendas((prev) => prev.map((v) => (v.id === editandoId ? { ...v, ...payload } : v)));
+      // Edição: substitui a venda com map()
+      setVendas((prev) => prev.map((v) => v.id === editandoId ? { ...v, ...payload } : v));
     } else {
-      // Modo criação: adiciona nova venda com ID único
+      // Criação: adiciona venda com ID único gerado pelo timestamp
       setVendas((prev) => [...prev, { id: Date.now(), ...payload }]);
     }
     cancelar();
@@ -150,49 +204,42 @@ export default function Vendas() {
 
   // Preenche o formulário com os dados da venda selecionada para edição
   const handleEditar = (venda) => {
-    setForm({
-      clienteId:  String(venda.clienteId),  // converte para string pois o select trabalha com string
-      cervejaId:  String(venda.cervejaId),
-      quantidade: venda.quantidade,
-      data:       venda.data,
-      valorTotal: venda.valorTotal,
-    });
+    setClienteId(String(venda.clienteId));
+    setData(venda.data);
+    setCarrinho([...venda.itens]); // cópia do array de itens
     setEditandoId(venda.id);
     setMostrarForm(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Exclui uma venda após confirmação do usuário
+  // Exclui uma venda após confirmação
   const handleExcluir = (id) => {
     if (window.confirm("Deseja excluir esta venda?"))
       setVendas((prev) => prev.filter((v) => v.id !== id));
   };
 
-  // Reseta o formulário e fecha o painel
+  // Reseta todos os estados e fecha o formulário
   const cancelar = () => {
-    setForm(FORM_VAZIO);
-    setEditandoId(null);
+    setClienteId("");
+    setData(hoje);
+    setCarrinho([]);
+    setCervejaIdAtual("");
+    setQtdAtual("");
     setErros({});
+    setErroItem({});
+    setEditandoId(null);
     setMostrarForm(false);
   };
 
-  // Alterna a visibilidade do formulário
   const toggleForm = () => {
     if (mostrarForm && editandoId === null) { cancelar(); return; }
-    setEditandoId(null);
-    setForm(FORM_VAZIO);
-    setErros({});
+    cancelar();
     setMostrarForm(true);
   };
 
-  // Busca o nome da cerveja pelo ID — retorna "Cerveja removida" se não encontrar
-  // Isso simula um JOIN: busca dados de outra tabela (cervejas) pelo ID relacionado
-  const getNomeCerveja = (cervejaId) =>
-    cervejas.find((c) => c.id === Number(cervejaId))?.nome ?? "Cerveja removida";
-
-  // Busca o nome do cliente pelo ID — retorna "Cliente removido" se não encontrar
-  const getNomeCliente = (clienteId) =>
-    clientes.find((c) => c.id === Number(clienteId))?.nome ?? "Cliente removido";
+  // Busca o nome do cliente pelo ID para exibição nos cards
+  const getNomeCliente = (id) =>
+    clientes.find((c) => c.id === Number(id))?.nome ?? "Cliente removido";
 
   return (
     <div className="page-container">
@@ -208,62 +255,30 @@ export default function Vendas() {
       {/* Formulário — visível somente quando mostrarForm for true */}
       {mostrarForm && (
         <div className="form-card">
-          <h2 className="form-title">
-            {editandoId ? "Editar Venda" : "+ Nova Venda"}
-          </h2>
+          <h2 className="form-title">{editandoId ? "Editar Venda" : "+ Nova Venda"}</h2>
           <form onSubmit={handleSubmit} noValidate>
+
+            {/* ── Seção 1: Dados gerais da venda ── */}
             <div className="form-grid">
 
-              {/* Select de Cliente — gerado com map() a partir da lista de clientes */}
+              {/* Select de cliente */}
               <div className="form-group">
                 <label htmlFor="v-cliente">Cliente *</label>
                 <select
                   id="v-cliente"
-                  value={form.clienteId}
-                  onChange={(e) => handleChange("clienteId", e.target.value)}
+                  value={clienteId}
+                  onChange={(e) => {
+                    setClienteId(e.target.value);
+                    setErros((p) => ({ ...p, clienteId: "" }));
+                  }}
                   className={erros.clienteId ? "input-erro" : ""}
                 >
                   <option value="">Selecione um cliente...</option>
-                  {/* Gera uma opção para cada cliente cadastrado */}
                   {clientes.map((c) => (
                     <option key={c.id} value={c.id}>{c.nome}</option>
                   ))}
                 </select>
                 {erros.clienteId && <span className="erro-msg">{erros.clienteId}</span>}
-              </div>
-
-              {/* Select de Cerveja — ao mudar, recalcula o valor total automaticamente */}
-              <div className="form-group">
-                <label htmlFor="v-cerveja">Cerveja *</label>
-                <select
-                  id="v-cerveja"
-                  value={form.cervejaId}
-                  onChange={(e) => handleChange("cervejaId", e.target.value)}
-                  className={erros.cervejaId ? "input-erro" : ""}
-                >
-                  <option value="">Selecione uma cerveja...</option>
-                  {/* Exibe o nome e o preço de cada cerveja na opção */}
-                  {cervejas.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.nome} — R$ {Number(c.preco).toFixed(2)}
-                    </option>
-                  ))}
-                </select>
-                {erros.cervejaId && <span className="erro-msg">{erros.cervejaId}</span>}
-              </div>
-
-              {/* Campo de quantidade — ao mudar, recalcula valorTotal */}
-              <div className="form-group">
-                <label htmlFor="v-qtd">Quantidade *</label>
-                <input
-                  id="v-qtd"
-                  type="number" min="1" step="1"
-                  value={form.quantidade}
-                  onChange={(e) => handleChange("quantidade", e.target.value)}
-                  placeholder="Ex: 10"
-                  className={erros.quantidade ? "input-erro" : ""}
-                />
-                {erros.quantidade && <span className="erro-msg">{erros.quantidade}</span>}
               </div>
 
               {/* Campo de data */}
@@ -272,32 +287,111 @@ export default function Vendas() {
                 <input
                   id="v-data"
                   type="date"
-                  value={form.data}
-                  onChange={(e) => handleChange("data", e.target.value)}
+                  value={data}
+                  onChange={(e) => {
+                    setData(e.target.value);
+                    setErros((p) => ({ ...p, data: "" }));
+                  }}
                   className={erros.data ? "input-erro" : ""}
                 />
                 {erros.data && <span className="erro-msg">{erros.data}</span>}
               </div>
-
-              {/* Campo de valor total — preenchido automaticamente, mas editável */}
-              <div className="form-group">
-                <label htmlFor="v-valor">Valor Total (R$) *</label>
-                <input
-                  id="v-valor"
-                  type="number" step="0.01" min="0.01"
-                  value={form.valorTotal}
-                  onChange={(e) => handleChange("valorTotal", e.target.value)}
-                  placeholder="Calculado automaticamente"
-                  className={erros.valorTotal ? "input-erro" : ""}
-                />
-                {erros.valorTotal && <span className="erro-msg">{erros.valorTotal}</span>}
-              </div>
             </div>
 
-            {/* Botões de ação */}
+            {/* ── Seção 2: Carrinho de compras ── */}
+            <div className="carrinho-section">
+              <p className="carrinho-titulo">Cervejas do Pedido</p>
+
+              {/* Linha para adicionar um item ao carrinho */}
+              <div className="carrinho-add">
+                <div className="form-group" style={{ flex: 2 }}>
+                  <select
+                    value={cervejaIdAtual}
+                    onChange={(e) => {
+                      setCervejaIdAtual(e.target.value);
+                      setErroItem((p) => ({ ...p, cervejaId: "" }));
+                    }}
+                    className={erroItem.cervejaId ? "input-erro" : ""}
+                  >
+                    <option value="">Selecione uma cerveja...</option>
+                    {cervejas.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.nome} — R$ {Number(c.preco).toFixed(2)}
+                      </option>
+                    ))}
+                  </select>
+                  {erroItem.cervejaId && <span className="erro-msg">{erroItem.cervejaId}</span>}
+                </div>
+
+                <div className="form-group" style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={qtdAtual}
+                    onChange={(e) => {
+                      setQtdAtual(e.target.value);
+                      setErroItem((p) => ({ ...p, quantidade: "" }));
+                    }}
+                    placeholder="Qtd"
+                    className={erroItem.quantidade ? "input-erro" : ""}
+                  />
+                  {erroItem.quantidade && <span className="erro-msg">{erroItem.quantidade}</span>}
+                </div>
+
+                {/* Botão que adiciona o item selecionado ao carrinho */}
+                <button type="button" className="btn-primary carrinho-btn-add" onClick={adicionarItem}>
+                  + Adicionar
+                </button>
+              </div>
+
+              {/* Mensagem de erro se tentar finalizar sem itens */}
+              {erros.carrinho && <span className="erro-msg">{erros.carrinho}</span>}
+
+              {/* Lista de itens adicionados ao carrinho */}
+              {carrinho.length > 0 && (
+                <div className="carrinho-lista">
+                  {/* Cabeçalho da tabela do carrinho */}
+                  <div className="carrinho-header">
+                    <span>Cerveja</span>
+                    <span>Qtd</span>
+                    <span>Unit.</span>
+                    <span>Subtotal</span>
+                    <span></span>
+                  </div>
+
+                  {/* Um item por linha */}
+                  {carrinho.map((item, i) => (
+                    <div key={i} className="carrinho-item">
+                      <span className="carrinho-item-nome">{item.cervejaNome}</span>
+                      <span>{item.quantidade} un.</span>
+                      <span>R$ {Number(item.valorUnitario).toFixed(2)}</span>
+                      <span className="carrinho-item-sub">R$ {Number(item.subtotal).toFixed(2)}</span>
+                      {/* Botão X para remover o item do carrinho */}
+                      <button
+                        type="button"
+                        className="carrinho-item-remover"
+                        onClick={() => removerItem(i)}
+                        title="Remover item"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Linha de total do pedido */}
+                  <div className="carrinho-total">
+                    <span>Total do Pedido</span>
+                    <span>R$ {totalCarrinho}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Botões de ação finais */}
             <div className="form-actions">
               <button type="submit" className="btn-primary">
-                {editandoId ? "Salvar Alterações" : "Registrar Venda"}
+                {editandoId ? "Salvar Alterações" : "Finalizar Venda"}
               </button>
               <button type="button" className="btn-secondary" onClick={cancelar}>
                 Cancelar
@@ -307,7 +401,7 @@ export default function Vendas() {
         </div>
       )}
 
-      {/* Lista de vendas ou mensagem de vazio */}
+      {/* Lista de vendas cadastradas */}
       {vendas.length === 0 ? (
         <div className="empty-state">Nenhuma venda registrada ainda.</div>
       ) : (
@@ -316,8 +410,6 @@ export default function Vendas() {
             <VendaCard
               key={venda.id}
               venda={venda}
-              // Resolve o nome da cerveja e do cliente pelo ID (JOIN simulado)
-              cervejaNome={getNomeCerveja(venda.cervejaId)}
               clienteNome={getNomeCliente(venda.clienteId)}
               onEditar={handleEditar}
               onExcluir={handleExcluir}

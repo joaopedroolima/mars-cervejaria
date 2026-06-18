@@ -27,42 +27,54 @@ export default function Relatorio() {
   // Carrega as vendas salvas (somente leitura — não há cadastro aqui)
   const [vendas]   = useState(() => lerStorage(STORAGE_VENDAS,   []));
 
-  // ── JOIN simulado: Vendas ✕ Cervejas ─────────────────────────────────────────────
-  // Para cada venda, busca a cerveja correspondente pelo cervejaId (como um JOIN no SQL)
-  // Resultado: cada venda enriquecida com o nome e estilo da cerveja
-  const vendasComCerveja = vendas.map((venda) => {
-    // find() busca a cerveja cujo id seja igual ao cervejaId da venda
-    // Number() converte a string cervejaId para número antes de comparar
-    const cerveja = cervejas.find((c) => c.id === Number(venda.cervejaId));
-    return {
-      ...venda,                                          // copia todos os campos da venda
-      cervejaNome:   cerveja?.nome   ?? 'Cerveja removida', // adiciona o nome da cerveja
-      cervejaEstilo: cerveja?.estilo ?? '—',                // adiciona o estilo da cerveja
-    };
-  });
+  // ── JOIN simulado: Vendas × Itens ────────────────────────────────────────────────
+  // Cada venda agora tem um array de itens (carrinho). flatMap() "abre" esse array:
+  // para cada venda → para cada item dentro dela → gera uma linha na tabela
+  // Isso simula um JOIN em SQL: SELECT vendas.data, itens.cervejaNome, itens.quantidade...
+  const linhasJoin = vendas.flatMap((venda) =>
+    (venda.itens ?? []).map((item) => ({
+      vendaId:     venda.id,           // ID do pedido pai
+      data:        venda.data,         // data do pedido
+      cervejaNome: item.cervejaNome,   // nome da cerveja (já salvo no item)
+      quantidade:  item.quantidade,    // quantidade desta cerveja neste pedido
+      subtotal:    item.subtotal,      // valor do item (quantidade × preço unitário)
+      valorTotal:  venda.valorTotal,   // valor total do pedido pai
+    }))
+  );
 
-  // ── Ranking: GROUP BY simulado com map() + filter() + reduce() ────────────────────
-  // Para cada cerveja, conta quantas vendas ela tem e soma os totais
+  // ── Ranking: GROUP BY simulado com flatMap() + filter() + reduce() ─────────────────
+  // Para cada cerveja, varre todos os itens de todas as vendas e agrega os números
   const ranking = cervejas
     .map((cerveja) => {
-      // filter() retorna apenas as vendas que pertencem a esta cerveja
-      const vendasDaCerveja = vendas.filter(
-        (v) => Number(v.cervejaId) === cerveja.id
-      );
-      // reduce() soma a quantidade de todas as vendas desta cerveja (equivalente ao SUM(quantidade))
-      const totalQtd   = vendasDaCerveja.reduce((s, v) => s + Number(v.quantidade),  0);
-      // reduce() soma o valor total de todas as vendas desta cerveja (equivalente ao SUM(valorTotal))
-      const totalValor = vendasDaCerveja.reduce((s, v) => s + Number(v.valorTotal),  0);
-      // Retorna a cerveja enriquecida com as métricas calculadas
-      return { ...cerveja, numPedidos: vendasDaCerveja.length, totalQtd, totalValor };
+      // flatMap() expande todos os itens de todas as vendas em uma lista plana
+      // filter() mantém apenas os itens que são desta cerveja (pelo cervejaId)
+      const itensDaCerveja = vendas
+        .flatMap((v) => v.itens ?? [])
+        .filter((item) => Number(item.cervejaId) === cerveja.id);
+
+      // reduce() soma a quantidade de unidades vendidas desta cerveja (equivale a SUM(quantidade))
+      const totalQtd = itensDaCerveja.reduce((s, item) => s + Number(item.quantidade), 0);
+
+      // reduce() soma o valor arrecadado com esta cerveja (equivale a SUM(subtotal))
+      const totalValor = itensDaCerveja.reduce((s, item) => s + Number(item.subtotal), 0);
+
+      // Conta em quantos pedidos distintos esta cerveja aparece
+      const numPedidos = new Set(
+        vendas
+          .filter((v) => (v.itens ?? []).some((i) => Number(i.cervejaId) === cerveja.id))
+          .map((v) => v.id)
+      ).size;
+
+      // Retorna a cerveja com as métricas calculadas
+      return { ...cerveja, numPedidos, totalQtd, totalValor };
     })
-    // sort() ordena as cervejas pela quantidade total vendida, do maior para o menor
+    // sort() ordena do mais vendido ao menos vendido pelo total de unidades
     .sort((a, b) => b.totalQtd - a.totalQtd);
 
-  // Totais gerais calculados a partir do ranking
-  // reduce() soma o totalValor de todas as cervejas → receita geral
-  const totalGeral    = ranking.reduce((s, r) => s + r.totalValor, 0);
-  // reduce() soma o totalQtd de todas as cervejas → unidades vendidas totais
+  // Totais gerais somados a partir do ranking
+  // reduce() soma totalValor de todas as cervejas → receita geral
+  const totalGeral = ranking.reduce((s, r) => s + r.totalValor, 0);
+  // reduce() soma totalQtd de todas as cervejas → unidades totais vendidas
   const totalUnidades = ranking.reduce((s, r) => s + r.totalQtd, 0);
 
   return (
@@ -82,7 +94,7 @@ export default function Relatorio() {
           <div className="stat-label">Total de Pedidos</div>
         </div>
 
-        {/* Total de unidades = soma de todas as quantidades */}
+        {/* Total de unidades = soma de todas as quantidades de todos os itens */}
         <div className="stat-card">
           <div className="stat-value">{totalUnidades}</div>
           <div className="stat-label">Unidades Vendidas</div>
@@ -127,10 +139,10 @@ export default function Relatorio() {
               </tr>
             ) : (
               // Gera uma linha para cada cerveja do ranking usando map()
-              // i = índice (0, 1, 2, ...) — usado para mostrar 1°, 2°, 3°, #4, etc.
+              // i = índice (0, 1, 2…) — usado para mostrar 1°, 2°, 3°, #4, #5…
               ranking.map((item, i) => (
                 <tr key={item.id}>
-                  {/* MEDALHAS[i] retorna '1°', '2°', '3°'; se i > 2, usa '#4', '#5'... */}
+                  {/* MEDALHAS[i] retorna '1°', '2°', '3°'; se i > 2, usa '#4', '#5'… */}
                   <td className="celula-medalha">{MEDALHAS[i] ?? `#${i + 1}`}</td>
                   <td><strong>{item.nome}</strong></td>
                   {/* badge-orange: etiqueta visual laranja para o estilo */}
@@ -145,40 +157,40 @@ export default function Relatorio() {
         </table>
       </div>
 
-      {/* Tabela detalhada: cada venda enriquecida com os dados da cerveja (JOIN simulado) */}
-      <p className="section-title">Vendas detalhadas — JOIN: Vendas ✕ Cervejas</p>
+      {/* Tabela detalhada: uma linha por item de cada venda (JOIN simulado) */}
+      {/* flatMap() expandiu os itens de cada venda → linhasJoin tem uma entrada por item */}
+      <p className="section-title">Vendas detalhadas — JOIN: Vendas × Itens × Cervejas</p>
       <div className="table-wrapper">
         <table className="table">
           <thead>
             <tr>
+              <th>Pedido</th>
               <th>Data</th>
               <th>Cerveja (via JOIN)</th>
-              <th>Estilo</th>
               <th>Quantidade</th>
-              <th>Valor Total</th>
+              <th>Subtotal</th>
             </tr>
           </thead>
           <tbody>
             {/* Se não houver vendas, exibe mensagem informativa */}
-            {vendasComCerveja.length === 0 ? (
+            {linhasJoin.length === 0 ? (
               <tr>
                 <td colSpan="5" className="celula-vazia">
                   Nenhuma venda registrada
                 </td>
               </tr>
             ) : (
-              // Gera uma linha para cada venda já enriquecida com os dados da cerveja
-              vendasComCerveja.map((venda) => (
-                <tr key={venda.id}>
-                  <td>{venda.data}</td>
-                  {/* cervejaNome vem do JOIN simulado feito acima no vendasComCerveja */}
-                  <td><strong>{venda.cervejaNome}</strong></td>
-                  <td>
-                    <span className="badge badge-orange">{venda.cervejaEstilo}</span>
-                  </td>
-                  <td>{venda.quantidade} un.</td>
+              // Gera uma linha para cada item expandido pelo flatMap() acima
+              linhasJoin.map((linha, i) => (
+                // i como key pois um mesmo pedido pode ter vários itens (chaves duplicadas seriam erro)
+                <tr key={i}>
+                  <td>#{linha.vendaId}</td>
+                  <td>{linha.data}</td>
+                  {/* cervejaNome vem diretamente do item salvo no carrinho */}
+                  <td><strong>{linha.cervejaNome}</strong></td>
+                  <td>{linha.quantidade} un.</td>
                   <td className="value-orange">
-                    R$ {Number(venda.valorTotal).toFixed(2)}
+                    R$ {Number(linha.subtotal).toFixed(2)}
                   </td>
                 </tr>
               ))
